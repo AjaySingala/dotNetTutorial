@@ -1,0 +1,11 @@
+Javascript:
+Closures:
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures
+	
+
+Callbacks:
+https://www.geeksforgeeks.org/javascript-callbacks/
+
+Promises:
+https://www.geeksforgeeks.org/javascript-promises/
+

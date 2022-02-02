@@ -1,0 +1,77 @@
+SQL Questions
+	Insert in to one table from another
+	What is the difference between varchar and nvarchar types?
+	How to get total records in a table?
+	Types of Triggers
+		Insert
+		Delete
+		Update
+		Instead of
+	What is a subquery and how to use it?
+	Commit vs rollback
+	What is RDBMS?
+	What are the properties of the Relational tables?
+		Relational tables have six properties:
+			Values are atomic.
+			Column values are of the same kind.
+			Each row is unique.
+			The sequence of columns is insignificant.
+			The sequence of rows is insignificant.
+			Each column must have a unique name.
+	What's the difference between a primary key and a unique key?
+		Ans. The differences between the primary key and a unique key are:
+			The primary key is a column whose values uniquely identify every row in a table. Primary key values can never be reused. They create a clustered index on the column and cannot be null.
+			A Unique key is a column whose values also uniquely identify every row in a table but they create a non-clustered index by default and it allows one NULL only.
+	How do I get the ID of the last inserted record?
+	Can we rename a column in the output of SQL query?
+		Ans. Yes by using the following syntax we can do this.
+		SELECT column_name AS new_name FROM table_name;
+	Is it possible to call a stored procedure within a stored procedure?
+		Ans. Yes, we call a stored procedure within a stored procedure It is called recursion property of SQL server and these type of stored procedures are called nested stored procedures.
+	What is FOREIGN KEY
+		Ans. When a one table’s primary key field is added to related tables in order to create the common field which relates the two tables, it called a foreign key in other tables.
+		Foreign Key constraints enforce referential integrity.
+	What is a CHECK Constraint?
+		Ans. A CHECK constraint is used to limit the values or type of data that can be stored in a column. They are used to enforce domain integrity.
+	What is Normalization?
+		Ans. The process of table design to minimize the data redundancy is called normalization. We need to divide a database into two or more table and define relationships between them. Normalization usually involves dividing a database into two or more tables and defining relationships between the tables.
+		List the different normalization forms?
+			1NF (Eliminate Repeating Groups): Make a separate table for each set of related attributes, and give each table a primary key. Each field contains at most one value from its attribute domain.
+			2NF (Eliminate Redundant Data): If an attribute depends on only part of a multi-valued key, remove it to a separate table.
+			3NF (Eliminate Columns Not Dependent On Key): If attributes do not contribute to a description of the key, remove them to a separate table. All attributes must be directly dependent on the primary key.
+	What is De-normalization?
+		Ans. De-normalization is the process of adding redundant data to a database to enhance the performance of it. It is a technique to move from higher to lower normal forms of database modeling in order to speed up database access.
+	What is a Trigger and types of a trigger?
+		Ans. The trigger allows us to execute a batch of SQL code when a table event occurs (Insert, update or delete command executed against a specific table). Triggers are stored in and managed by DBMS. It can also execute a stored procedure.
+		3 types of triggers that are available in the SQL Server are as follows:
+			DML Triggers: DML or Data Manipulation Language triggers are invoked whenever any of the DML commands like INSERT, DELETE or UPDATE happens on the table or on the view.
+			DDL Triggers: DDL or Data Definition Language triggers are invoked whenever any changes occur in the definition of any of the database objects instead of actual data. These are very helpful to control the production and development of database environments.
+			Logon Triggers: These are very special triggers which fire in case of the logon event of the SQL Server. This is fired before setup of a user session in the SQL Server.
+	What is the Subquery?
+		Ans. A Subquery is a subset of select statements whose return values are used in filtering conditions of the main query. It can occur in a SELECT clause, FROM clause and WHERE clause. It nested inside a SELECT, INSERT, UPDATE, or DELETE statement or inside another subquery.
+		Types of Sub-query:
+			Single-row sub-query: where the sub-query returns only one row
+			Multiple-row sub-query: where the subquery returns multiple rows, and
+			Multiple column sub-query: where the sub-query returns multiple columns
+	What is View?
+		Ans. A view is a virtual table which contains data from one or more tables. Views restrict data access of the table by selecting only required values and make complex queries easy.
+		Rows updated or deleted in the view are updated or deleted in the table the view was created with. It should also be noted that as data in the original table changes, so does data in the view, as views are the way to look at part of the original table. The results of using a view are not permanently stored in the database
+	How do you return multiple records from a function (UDF)?
+		Create Function fun1(@num int)
+		returns table
+		as
+			return select * from employee where empid=@num
+
+		This function can be executed as follows:
+			select * from fun1(12)
+	What is CTE?
+		Common Table Expression
+	What are the different types of Columns Types Constraints in the SQL Server?
+		Ans. SQL Server provides 6 types of Constraints. These are as follows:
+			Not Null Constraint: This puts a constraint that the value of a column cannot be null.
+			Default Constraint: This constraint provides some default value that can be inserted in the column if no value is specified for that column.
+			Check Constraint
+			Unique Constraint
+			Primary Key Constraint
+			Foreign Key Constraint
+

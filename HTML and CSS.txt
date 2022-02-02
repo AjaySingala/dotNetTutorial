@@ -1,0 +1,147 @@
+HTML:
+Semantic Elements:
+	https://www.w3schools.com/html/html5_semantic_elements.asp
+Semantics is the study of the meanings of words and phrases in a language.
+
+Semantic elements = elements with a meaning.
+
+What are Semantic Elements?
+A semantic element clearly describes its meaning to both the browser and the developer.
+
+Examples of non-semantic elements: <div> and <span> - Tells nothing about its content.
+
+Examples of semantic elements: <form>, <table>, and <article> - Clearly defines its content.
+
+HTML5 offers new semantic elements to define different parts of a web page:  
+
+	<article>
+	<aside>
+	<details>
+	<figcaption>
+	<figure>
+	<footer>
+	<header>
+	<main>
+	<mark>
+	<nav>
+	<section>
+	<summary>
+	<time>
+Sample structure:
+|-----------------------|
+|	<header>			|
+|-----------------------|
+|	<nav>				|
+|-----------------------|
+|<section> |			|
+|----------|  <aside>	|
+|<article> |			|
+|-----------------------|
+|	<footer>			|
+|-----------------------|
+
+Microdata:
+Microdata is part of the WHATWG HTML Standard and is used to nest metadata within existing content on web pages. Search engines and web crawlers can extract and process microdata from a web page and use it to provide a richer browsing experience for users. Search engines benefit greatly from direct access to this structured data because it allows search engines to understand the information on web pages and provide more relevant results to users. Microdata uses a supporting vocabulary to describe an item and name-value pairs to assign values to its properties. Microdata is an attempt to provide a simpler way of annotating HTML elements with machine-readable tags than the similar approaches of using RDFa and classic microformats.
+
+It is similar to, but generally less expressive than RDFa, and does not support the same level of internationalization. It is simple to learn and process, but authors who need good internationalization support, or want to include structured content in their data should consider using RDFa. (or another format such as JSON-LD) instead.
+
+RDFa (or Resource Description Framework in Attributes) is a W3C Recommendation that adds a set of attribute-level extensions to HTML, XHTML and various XML-based document types for embedding rich metadata within Web documents.
+
+CSS Rulesets:
+A CSS rule-set consists of a selector and a declaration block.
+The selector points to the HTML element you want to style.
+
+The declaration block contains one or more declarations separated by semicolons.
+
+Each declaration includes a CSS property name and a value, separated by a colon.
+
+A CSS declaration always ends with a semicolon, and declaration blocks are surrounded by curly braces. 
+p {
+  color: red;
+  text-align: center;
+}
+
+CSS Values-Size:
+Absolute Lengths: The absolute length units are fixed and a length expressed in any of these will appear as exactly that size.
+Unit	Description
+cm		centimeters
+mm		millimeters
+in		inches (1in = 96px = 2.54cm)
+px		pixels (1px = 1/96th of 1in)
+(Pixels (px) are relative to the viewing device. For low-dpi devices, 1px is one device pixel (dot) of the display. For printers and high resolution screens 1px implies multiple device pixels.)
+pt		points (1pt = 1/72 of 1in)
+pc		picas (1pc = 12 pt)
+
+Relative Lengths: Relative length units specify a length relative to another length property. Relative length units scales better between different rendering mediums.
+Unit	Description	
+em		Relative to the font-size of the element (2em means 2 times the size of the current font)	
+ex		Relative to the x-height of the current font (rarely used)	
+ch		Relative to width of the "0" (zero)	
+rem		Relative to font-size of the root element	
+vw		Relative to 1% of the width of the viewport
+(Viewport = the browser window size. If the viewport is 50cm wide, 1vw = 0.5cm.)
+vh		Relative to 1% of the height of the viewport
+vmin	Relative to 1% of viewport's* smaller dimension	
+vmax	Relative to 1% of viewport's* larger dimension	
+%		Relative to the parent element
+
+
+https://www.w3schools.com/html/html5_audio.asp
+https://www.w3schools.com/html/html5_video.asp
+https://www.w3schools.com/graphics/canvas_intro.asp
+https://www.w3schools.com/graphics/canvas_drawing.asp
+
+	Form - Validation:
+https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation
+
+CSS:
+https://css-tricks.com/child-and-sibling-selectors/
+https://www.w3schools.com/css/css_combinators.asp
+https://www.w3schools.com/css/css_pseudo_classes.asp
+https://www.w3schools.com/css/css_pseudo_elements.asp
+
+CSS Combinators
+A combinator is something that explains the relationship between the selectors.
+
+A CSS selector can contain more than one simple selector. Between the simple selectors, we can include a combinator.
+
+There are four different combinators in CSS:
+	descendant selector (space)
+	child selector (>)
+	adjacent sibling selector (+)
+	general sibling selector (~)
+
+Descendant Selector:
+The descendant selector matches all elements that are descendants of a specified element.
+
+The following example selects all <p> elements inside <div> elements: 
+div p {
+  background-color: yellow;
+}
+
+Child Selector:
+The child selector selects all elements that are the children of a specified element.
+
+The following example selects all <p> elements that are children of a <div> element:
+div > p {
+  background-color: yellow;
+}
+
+Adjacent Sibling Selector:
+The adjacent sibling selector selects all elements that are the adjacent siblings of a specified element.
+
+Sibling elements must have the same parent element, and "adjacent" means "immediately following".
+
+The following example selects all <p> elements that are placed immediately after <div> elements:
+
+div + p {
+  background-color: yellow;
+}
+
+General Sibling Selector:
+The general sibling selector selects all elements that are siblings of a specified element.
+
+The following example selects all <p> elements that are siblings of <div> elements: 
+div ~ p {
+  background-color: yellow;
+}

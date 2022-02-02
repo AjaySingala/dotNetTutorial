@@ -1,0 +1,8 @@
+http://www.sqlservertutorial.net/sql-server-basics/sql-server-left-join/
+http://www.sqlservertutorial.net/sql-server-basics/sql-server-right-join/
+http://www.sqlservertutorial.net/sql-server-basics/sql-server-cross-join/
+http://www.sqlservertutorial.net/sql-server-basics/sql-server-full-outer-join/
+UNION, UNION ALL:
+https://docs.microsoft.com/en-us/sql/t-sql/language-elements/set-operators-union-transact-sql?view=sql-server-ver15
+EXCEPT and INTERSECT:
+https://docs.microsoft.com/en-us/sql/t-sql/language-elements/set-operators-except-and-intersect-transact-sql?view=sql-server-ver15
