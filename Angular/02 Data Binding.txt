@@ -1,0 +1,15 @@
+<input type="text" [value]="myName">
+<button (click)="colorChange(textColor)" [style.color]="textColor">Change My Color</button>
+<input type="text" [(ngModel)]="textColor">
+
+<table border=2>
+    <!--  expression calculates colspan=2 -->
+    <tr>
+        <td [attr.colspan]="1 + 1 + 1">Left - Center - Right</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+    </tr>
+</table>

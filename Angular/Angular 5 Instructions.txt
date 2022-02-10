@@ -1,0 +1,1130 @@
+Angular:
+	Is written in TypeScript (TS)
+	TS is a pre-compiler
+		Developed by Microsoft, open source
+	Browser does not recognize TS
+	It compiles in to JavaScript that can then be used (in .NET Core etc.)
+	Angular 2/4/5 is very different from Angular1 (AngularJS)
+
+
+TypeScript:
+	1) What is TS and why to use it?
+	TS is similar to JS
+	Integrates easily in to JS projects
+	Can be used in Angular and WinJS (Windows Library for JS)
+	It's an open source lib by Microsoft
+	Powerful features like classes and modules
+	integrated with Gulp or Grunt (task runners)
+		Grunt: Task runner. Managing the flow of developing projects.
+		Gulp: Similar. Compile TS code to JS automatically
+	For small projects, JS is fine. But for larger projects, use TS for better organization and control and debugging features.
+	
+	www.typescriptlang.org/handbook
+	
+	2) Install TS and basic compiling
+		Requires Node.js
+		Check if NodeJS + NodeJS Package Manager (npm) is installed or not
+		node -v
+		npm -v
+		
+		Or install from https://nodejs.org/en/
+		
+		Install TS:
+			npm install -g typescript
+				OR go to typescriptlang.org and install the editor
+			-g means install globally, so available to all projects.
+			run TSC to check TS installation
+	
+	First TS (using VS Code):
+		Create a folder "helloWorld" and navigate to that
+		Create file called helloWorld.ts
+			console.log("Hello World");
+			from cmd prompt, TSC helloWorld.ts
+			creates helloWorld.js
+			run with node helloWorld.js
+			
+		Add a func:
+			// remove the console.log("Hello World");
+			function hello(string: String) {
+				console.log("Hello " + string);
+			}
+			
+			hello("Ajay");
+		from cmd: node helloWorld.js
+			shows Hello World
+		but node helloWorld.ts will not work as node does not recognize TS, only JS
+		so, TSC helloWorld.ts, updates the js file
+		run node helloWorld.js
+			shows Hello Ajay
+		
+		change code to: hello(12)
+		tsc helloWorld.ts
+			error: number not assignable to param of type string
+		change to hello("Neo");
+		compile and run. works.
+	
+	1.1) 
+		A) greeter.ts:
+class Student {
+	fullName: string;
+	constructor(public firstName: string, public middleInitial: string, public lastName: string) {
+		this.fullName = firstName + " " + middleInitial + " " + lastName;
+	}
+}
+
+interface Person {
+	firstName: string;
+	lastName: string;
+}
+
+function greeter(person : Person) {
+	return "Hello, " + person.firstName + " " + person.lastName;
+}
+
+let user = new Student("Jane", "M.", "User");
+
+document.body.innerHTML = greeter(user);
+	
+		Run TSC greeter.ts
+		Generates greeter.js
+		
+		B) greeter.html
+		<!DOCTYPE html>
+		<html>
+			<head><title>TypeScript Greeter</title></head>
+			<body>
+				<script src="greeter.js"></script>
+			</body>
+		</html>
+		
+		C)
+		Open greeter.html in browser.
+	
+	2) Type system of TS:
+		Basic types intro
+		new folder, types
+		file types.ts
+			define type with a colon
+			var n: Number = 1;
+			compile and show .js
+				does not have "Number"
+			n = "Ajay"
+			compile, gives error
+			but .js has n = "Ajay". So TS is basically warning us that it "may" not work, but JS it is fine
+			so, fix it anyways
+			either change value to numeric or type to "any"
+				do not use "any" too much
+	3) built-in types:
+		Boolean:
+			open types.ts
+			var isWinter : Boolean = false;
+			isWinter = 123;
+			compile: error??? No.
+			
+			comment isWinter = 123;
+			var count: number = 5;
+			var name: string = "Neo";
+			
+		Array:
+			var names : string[] ["Ajay", "Neo"];
+			This will give error:
+				var names = string[] ["Ajay", "Neo", 5];
+			to store multiple types, define as "any": var names : any[] ["Ajay", "Neo", 5];
+		
+		Enum:
+			enum Starks { Jon, Bran, Heather, Catlyn };
+			var cat : Starks = Starks.Catlyn;
+		
+		void:
+			function getName() : string {
+				return "Ajay";	// return 1 will throw an error.
+			}
+			
+			use "void" when not returning anything:
+			function getName() : void {
+				console.log("some message");
+			}
+	4) Interfaces:
+		Interface is a defn for an object that tells TS what that obj is going to be
+		It is a blueprint for an object
+		in interfaces.ts:
+			function printName(stark) {
+				console.log(stark.name);
+			}
+			
+			printName({name: "Ajay"});
+			printName({label: "Joe"});
+		compile: success. but run will give error.
+		run:
+			Ajay
+			undefined
+		difficult to determine what went wrong. Interface to the rescue.
+		in interfaces.ts:
+			interface Stark {
+				name: string;
+			}
+			
+			function printName(stark: Stark) {
+				console.log(stark.name);
+			}
+			
+			printName({name: "Ajay");
+			printName({label: "Joe"});
+		Compile: error, "name" is missing in type.
+		change to:
+			printName({name: "Ajay");
+			printName({name: "Joe"});
+		runs.
+		
+		modify:
+			interface Stark {
+				name: string;
+				age: number;
+			}
+		compile: error. 2 errors. both names do not have property age, as it is "required".
+		to make age optional:
+			age?: number
+		compile: works
+	5) Classes
+		create classes.ts
+			class Stark {
+				name: string;
+			}
+			
+			var ned = new Stark();
+		compile. look at the .js code
+			ned.saying = "Winter is coming";
+		compile: error "property does not exist"
+			class Stark {
+				name: string;
+				saying: string;
+			}
+		// cannot have optional vars in classes
+		Classes can have ctors
+			class Stark {
+				name: string = "Brandon";	// default value.
+				saying: string;
+				static castle: string = "Winterfell"!;
+			
+				constructor() {
+					this.saying = "Winterfell!";
+				}
+			}
+			
+			console.log(Stark.castle);
+		compile + run: winterfell!
+		add methods to classes:
+			class Stark {
+				name: string = "Brandon";	// default value.
+				saying: string;
+				static castle: string = "Winterfell"!;
+			
+				constructor() {
+					this.saying = "Winterfell!";
+				}
+				
+				hello(person: string) {
+					console.log("Hello " + person);
+				}
+			}
+			//console.log(Stark.castle);
+			var ned = new Stark();
+			ned.hello("Robert");
+	6) Inheritance:
+		use "extends"
+		create extends.ts
+			class Person {
+				name: string;
+				
+				constructor(name:string) {
+					this.name = name;
+				}
+				
+				dance() {
+					console.log(this.name + " is dancing.");
+				}
+			}
+			
+			var person = new Person("Bryan");
+			person.dance();
+			compile + run. works.
+		another class:
+			class AwesomePerson extends Person {
+				// override func.
+				dance() {
+					console.log("Sooo awesome!");
+				}
+			}
+			
+			var robb = new AwesomePerson("Robb");
+			robb.dance();
+		compile+run:
+			Bryan is dancing
+			Sooo awesome!
+		call base class' func:
+			class AwesomePerson extends Person {
+				// override func.
+				dance() {
+					console.log("Sooo awesome!");
+					super.dance();	// invoke func in base class.
+				}
+			}
+			
+			var robb = new AwesomePerson("Robb");
+			robb.dance();
+		compile+run:
+			Bryan is dancing
+			Sooo awesome!
+			Robb is dancing
+	7) Modules
+		share code b/w files.
+		create timesTwo.ts
+			function timesTwo(n:number) {
+				return n * 2;
+			}
+		create new TS file, util.ts
+			console.log(timesTwo(9));
+		tsc util.ts
+			error. can't find timesTwo
+		have to define a dependency.
+		so, make timesTwo a module
+			module Utility {
+				export class Useful {
+					timesTwo(n:number) {
+						return n * 2;
+					}
+				}
+			}
+		in util.ts:
+			/// <reference path="timesTwo.ts" />
+			var use = new Utility.Useful();
+			console.log(use.timesTwo(9));
+		compile: no error.
+		node util.js: error: Utility is not defined.
+			because we compiled only util.ts and not timesTwo.ts
+			We must combine both together and compile+run
+			TSC util.ts timesTwo.ts --out util.js
+			open util.js
+			node util.js
+				shows 18
+		
+	More TS examples:
+		Create a main.ts file
+		compile it with TSC main.ts
+		Generates main.js
+		
+	tsconfig.json:
+		root config file
+		indicates root folder
+	
+	var vs let
+		var in JS is function scoped (in C#, it is block scoped)
+		let is block scoped
+	
+	interfaces
+		similar to C#
+	classes
+		same
+		use "extends" for inheritance
+		super = base
+			class Person {
+				:
+			}
+			
+			class Jogger extends Person {
+				constructor(name: string) { super(name); }
+			}
+	functions
+		function multiply(a, b) {
+			return a * b;
+		}
+
+		// Specify return type
+		function multiplyTS(a: number, b: number): number {
+			return a * b;
+		}
+		
+		let num = multiplyTS(6, 7);
+		
+		// Optional param.
+		function optional(x: number, name?: string) {
+			return x + " " + name;
+		}
+		
+		let option = optional(3);
+	
+	enums
+		enum keyword
+		enum Values {
+			First = 1,
+			Second = 2,
+			Third = 3,
+			Fourth = 4
+		}
+		
+		let first = Values.First;				// 1
+		let nameOfFirst = Values[Values.First];	// "First"
+	
+	Generics
+		function value(myval: number): number {
+			return myval;
+		}
+		
+		function value2(myval2: any): any {
+			return myval2;
+		}
+		
+		let val0 = value(6);		// works
+		let val1 = value("test");	// compile error
+		let val2 = value2("test");	// works
+		let val3 = value2(24);		// works
+	
+		function type<T>(parameter: T): T {
+			return parameter;
+		}
+	
+		function identity<T>(arg: T): T {
+			//console.log(arg.length);    // Error. T doesn't have length.
+			return arg;
+		}
+
+		var output = identity<string>("Ajay");
+		console.log(output);
+
+		var output2 = identity("Ajay Singala");
+		console.log(output2);
+
+		// Array Generic
+		function identityLog<T>(arg: T[]): T[] {
+			console.log(arg.length);    // Array has length. No error.
+			return arg;
+		}
+
+		var id = identityLog(["ajay", "neo", "trinity"]);
+		console.log(id[0]);
+
+		Generic classes:
+			
+	Modules
+		executed within their scope, not globally
+		unless exported and then imported in another module
+		
+		Example #1: use the expClass and impClass ts files.
+		Another example: use the IShape, ICircle, ITraingle & TestShape ts files.
+		
+		// modules.ts
+		#1
+		export class MyClass {
+			myFunction(x: string) {
+				return x;
+			}
+		}
+		
+		#2: Does not work!
+		class MyClass {
+			myFunction(x: string) {
+				return x;
+			}
+		}
+		export{MyClass};
+		
+		// open another module file: importmodule.ts
+		import { MyClass } from "./modules";	// relative path
+		
+		let object = new MyClass();
+		console.log(object.myFunction("value"));
+
+		#3: Export as a different name. Does not work!
+		class MyClass {
+			myFunction(x: string) {
+				return x;
+			}
+		}
+		export{MyClass as MainClass};
+		
+		// open another module file: importmodule.ts
+		import { MainClass } from "./modules";	// relative path
+		
+		let object = new MainClass();
+		console.log(object.myFunction("value"));
+		
+	Namespaces:
+		internal modules => namespaces
+		external modules => modules
+		
+		similar to C# to organize code
+		can be done in same file or separate files.
+		
+		// namespaces.ts file
+		namespace Primary {
+			export interface PrimaryInterface {
+				isTrue(x: string): boolean;
+			}
+		}
+		
+		// importnamespaces.ts file
+		/// <reference path="namespaces.ts" />
+		namespace Primary {
+			export class SecondNamespace implements PrimaryInterface {
+				isTrue(x: string) {
+					if(x === "true") {
+						return true;
+					}
+					return false;
+				}
+			}
+		}
+		
+	Iterators:
+		var listItems = [5, 6, 7];
+		for (var x1 in listItems) {
+			console.log(x1);		// output: "0", "1", "2"
+		}
+		// show values.
+		for (var x2 in listItems) {
+			console.log(listItems[x2]);		// output: 5, 6, 7
+		}
+
+		// LET not working in TS.
+		diff b/w "let in" and "let of".
+		
+		// Iterators.ts file
+		let listItems = [5, 6, 7];
+		for(let x in listItems) {
+			console.log(x);		// output: "0", "1", "2"
+		}
+		// show values.
+		for(let x of listItems) {
+			console.log(x);		// output: 5, 6, 7
+		}
+
+	Modifiers (not working).
+		"public" not used, like in C#
+		in TS, it is public by default
+		can declare private if required
+		protected not working
+		
+		// modifiers.ts
+		//#1
+		class Modifier {
+			private myName: string;
+			
+			constructor(theName: string) {
+				this.myName = theName;
+			}
+		}
+		
+		let myModifier = new Modifier("Jack").myName;	// compile error. myName is private
+
+		//#2
+		class Modifier {
+			private myName: string;
+			
+			constructor(theName: string) {
+				this.myName = theName;
+			}
+		}
+		
+		class Implement extends Modifier {
+			protected hairColor: string;
+			
+			constructor(name: string, color: string) {
+				super(name);
+				this.hairColor = color;
+			}
+			
+			public getNameHairColor() {
+				return "My hair color is ${this.hairColor} and my name is ${this.name}";
+			}
+		}
+		
+		let myImplement = new Implement("Jack", "Red");		// Compiles.
+		console.log(myImplement.getNameHairColor());
+		console.log(myImplement.hairColor);					// compile error. protected.
+	
+	TS Compile
+		show compiled modifiers.js and compare to .ts file
+	
+Angular 5:		
+	Check if NodeJS + NodeJS Package Manager (npm) is installed or not
+		node -v
+		npm -v
+
+		If not installed, download+install from nodejs.org
+			include npm as well
+		
+		To install the Angular CLI:
+			https://cli.angular.io
+				npm install -g @angular/cli
+
+Install the Angular CLI:
+	npm install @angular/cli -g
+		-g is for "global"
+	ng -v	// Verify it is installed
+	ng		// lists tons of options to use
+
+Create project:
+	1) cd <<project folder>>
+	ng new <<name>> --style=scss --routing
+	For e.g.;
+		ng new ng5 --style=scss --routing
+			--style:	to use css style
+				scss pronounced as "sas" file
+			--routing:	to integrate and setup routing by default in our project
+	
+	cd ng5
+	ng serve	// builds the project. Note the port number where the app will be accessible. For e.g.; 
+	// Keep the ng serve console running at all times as it is required to run the app
+	// For any other ng tasks, open a new console and work from there
+	localhost:4200
+	Open browser, navigate to http://localhost:4200 to test
+
+	Work from the src/app folder
+	open a new console window
+	cd src/app
+	add <app-root>Loading...</app-root> to the index.html
+	app.component.ts	// .ts =TypeScript
+		divided in 3 sections:
+			1. imports
+			2. @Component decorator
+				define structure of component
+			3. Actual component class
+	create a new component using ng cli:
+		ng generate component <<compnent name>>
+		ng generate component home
+			generates/updates files:
+				src/app/home/home.component.html
+				src/app/home/home.component.spec.ts
+				src/app/home/home.component.ts
+				src/app/home/home.component.scss
+				src/app/app.module.ts	// Updated
+	create one more component, this time using shorthand format:
+		ng g c about
+			g = generate
+			c = component
+	nesting components:
+		// nest home in to app component
+		// HTML is aka TEMPLATE
+		open app.component.html
+			add routerLink to home and about
+			remove all code except last line --> <router-outlet>
+			add the following just above <router-outlet>:
+				<ul>
+					<li><a routerLink="">Home</a></li>
+					<li><a routerLink="about">About</a></li>
+				</ul>
+				
+				<app-home></app-home>		// This will be the "selector" in home.component.ts
+				
+			Save
+			Reflects in browser immediately
+	
+			Notes:
+				in about.component.ts:
+					selector: 'app-about',
+				in home.component.ts:
+					selector: 'app-home',
+				in app.component.ts:
+					selector: 'app-root',
+				in index.html:
+					<body>
+						<app-root></app-root>
+					</body>
+			
+			in app.component.ts:
+				
+	2) Templating & Styling
+		in the html file, instead of:
+			templateUrl: '...',
+		enter actual HTML in back-ticks as:
+			template: `<h1>Hello</h1>`,
+		
+		Same for styles. Instead of:
+		  styleUrls: ['./home.component.scss']
+		enter:
+		  styles: [`
+		    p { font-weight: bold }c
+		    div { color: gray; }
+		  `] 
+  
+	Note: Remember to change back to templateUrl and styleUrls.
+	
+	Modify the scss for:
+		src/style.scss
+		src/app/home/home.scss
+		
+	3) Interpolation, Property Binding & Event Binding
+		Interpolation: {{ }}
+			displaying property values defined in the component on the html
+			Demo:
+				Define a property itemCount: number = 4 in home.c.ts
+				Add ({{ itemCount }}) to home.c.html as:
+					<p>Your bucket list ({{ itemCount }})</p>
+			Demo 2:
+				Define property btnText: string = 'Add an item' in home.c.ts
+				<input type="submit" class="btn" value="{{ btnText }}"> in home.c.html
+			
+		Property binding: []
+			in home.c.html, change to (w/o the {{..}}, but with [&]):
+				<input type="submit" class="btn" [value]="btnText">
+		
+		The above is 1-way binding, from component to html.
+		
+		2-way data binding:
+			To retrieve and set the value of a text box, for e.g.
+			Have to use ngModel after importing FormsModule to make it work.
+			
+			using [(ngModel)]:
+				import the module
+				add to imports array
+				
+			in app.module.ts:
+				import { FormsModule } from '@angular/forms';
+				:
+				@NgModule({
+				  declarations: [
+					:
+				  ],
+				  imports: [
+					:
+					FormsModule
+				  ],
+				  providers: [],
+				  bootstrap: [AppComponent]
+				})
+			in home.component.ts
+				goalText: string = 'My first life goal';
+			in home.component.html setup 2-way data binding:
+				<input type="text" class="txt" name="item" placeholder="Life goal.." [(ngModel)]="goalText">
+			Temporarily, also add a span after the input box:
+				 <br><span>{{ goalText }}</span>
+			On UI, when entering text, it also updates the span element.
+			
+		Event binding (for e.g; button click):
+			Delete the <span> from previous demo.
+			home.component.html:
+				<input type="submit" class="btn" [value]="btnText" (click)="addItem()">
+			home.component.ts, define an array and remove init value of itemCount.
+				itemCount: number;
+				goals = [];
+				
+				// Lifecycle hook when the component loads.
+				ngOnInit() {
+					this.itemCount = this.goals.length;
+				}
+				
+				addItem() {
+					this.goals.push(this.goalText);
+					this.goalText = '';
+					this.itemCount = this.goals.length;
+				}
+			In the UI, this will increment the item count, but not the list of goals.
+			To update the list, use ngFor:
+			home.component.html:
+				<div class="col">
+					<p class="life-container" *ngFor="let goal of goals">
+						{{ goal }}
+					</p>
+				</div>
+	4) Animation:
+		Animate each life goal item as it gets added.
+		
+		go to cmd console (if error, open with Run as Administrator)
+		install animations library
+			npm install @angular/animations@latest --save
+		open app.module.ts
+			import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+			:
+			@NgModule({
+			  declarations: [
+				:
+			  ],
+			  imports: [
+				:
+				BrowserAnimationsModule
+			  ],
+			  providers: [],
+			  bootstrap: [AppComponent]
+			})
+		open home.component.ts
+			NOTE: sometimes the animation fails if we don't specify {optional: true}.
+			// Reset user settings in preferences if required.
+			import { trigger, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
+			:
+			@Component({
+			  :
+			  animations: [
+				  trigger('goals', [
+					transition('* => *', [
+						query(':enter', style({ opacity: 0}), {optional: true}),	// when something enters the DOM
+						query(':enter', stagger('300ms', [		// delay each subsequent DOM element by 300ms.
+							animate('.6s ease-in', keyframes([
+								style({opacity: 0, transform: 'translateY(-75%)', offset: 0}),	// come from top.
+								style({opacity: 0.5, transform: 'translateY(35px)', offset: 0.3}), // happens in the middle of the 0.6s duration.
+								style({opacity: 1, transform: 'translateY(0)', offset: 1}),
+							]))
+						]), {optional: true})
+					])
+				  ])
+			  ]
+			})
+		apply animations to the template
+		home.component.html
+			// @goals is the name of the animation.
+			<div class="container color-light" [@goals]="goals.length">
+		for initial testing, add some values to the goals array
+		open home.component.ts
+			goals = ['My first life goal', 'I want to climb a mountain', 'Go skiing'];
+		refresh browser
+		
+		
+		Remove items from list when you click on them:
+			home.component.html
+				<p class="life-container"  *ngFor="let goal of goals; let i = index" (click)="removeItem(i)" >
+			home.component.ts
+				removeItem(i) {
+					this.goals.splice(i, 1);	// typical javascript.
+				}
+			add one more animation that will be the reverse of previous one. Just add another ""leave" "query" to the current "animations" array.
+			home.component.html
+				animations: [
+				  trigger('goals', [
+					transition('* => *', [
+						query(':enter', style({ opacity: 0}), {optional: true}),
+						query(':enter', stagger('300ms', [
+							animate('.6s ease-in', keyframes([
+								style({opacity: 0, transform: 'translateY(-75%)', offset: 0}),
+								style({opacity: 0.5, transform: 'translateY(35px)', offset: 0.3}),
+								style({opacity: 1, transform: 'translateY(0)', offset: 1}),
+							]))
+						]), {optional: true}),
+						
+						// This is the new one added. Reverse of ":enter".
+						query(':leave', stagger('300ms', [
+							animate('.6s ease-in', keyframes([
+								style({opacity: 1, transform: 'translateY(0)', offset: 0}),
+								style({opacity: 0.5, transform: 'translateY(35px)', offset: 0.3}),
+								style({opacity: 0, transform: 'translateY(-75%)', offset: 1}),
+							]))
+						]), {optional: true})
+						
+					])
+				  ])
+			  ]
+			})
+	5) Routing
+		app-routing.module.ts
+			import { HomeComponent } from './home/home.component';
+			import { AboutComponent } from './about/about.component';
+			
+			const routes: Routes = [
+				{
+					path: '',
+					component: HomeComponent
+				},
+				{
+					path: 'about',
+					component: AboutComponent
+				}
+			];
+		browser will show home page contents twice
+		app.component.html
+			remove <app-home></app-home>
+		Will work now.
+		
+		Route parameters and how to retrieve them:
+			app-routing.module.ts
+				const routes: Routes = [
+					{
+						path: '',
+						component: HomeComponent
+					},
+					{
+						path: 'about/:id',
+						component: AboutComponent
+					}
+				];
+				can have path: 'about/:id/:whatever' also
+		app.component.html
+			// use a hard-coded id for now.
+			<li><a routerLink="about/48">About</a></li>
+			
+		but, how to extract the parameters from the url?
+		about.component.ts
+			import { ActivatedRoute } from '@angular/router';
+			
+			// DI
+			export class AboutComponent implements OnInit {
+
+			  constructor(private route: ActivatedRoute) { 
+				this.route.params.subscribe(res => console.log(res.id));
+			  }
+
+			  ngOnInit() {
+			  }
+			}
+		Run and it displays the id in the console (F12).
+		normally, you would take this id, assign it to a property and call an API.
+		
+		Component based router navigation:
+			about.component.ts
+				import { Router } from '@angular/router';
+				
+				//DI
+				export class AboutComponent implements OnInit {
+					constructor(private route: ActivatedRoute,
+						private router: Router) { 
+						
+						this.route.params.subscribe(res => console.log(res.id));
+					}
+
+				  ngOnInit() {
+				  }
+				  
+				  sendMeHome() {
+					// The '' maps to the path in app-routing.module.ts for HomeComponent.
+					this.router.navigate(['']);
+				}
+			about.component.html
+				<p>
+					This is I'm all about. <a href="" (click)="sendMeHome()"><strong>Take me back</strong></a>
+				</p>
+	6) Services / Dependency Injection (DI):
+		generally used for making http calls or sharing data between components
+		Share the goals array b/w home and about component.
+		cmd console:
+			ng generate service data
+			// ng g s data
+			// generates src/app/data.service.ts
+		open data.service.ts
+			// have to import the Injectable module
+			import { Injectable } from '@angular/core';
+			import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+			
+			@Injectable()
+			export class DataService {
+				private goals = new BehaviorSubject<any>(['First', 'second']);
+				goal = this.goals.asObservable();
+				
+				constructor() { }
+				
+				changeGoal(goal) {
+					this.goals.next(goal);
+				}
+			}
+			
+		// 2 ways to import.
+		// #1: specify the service as a "provider" in app.component.ts (or any component individually) in 
+		//		the @Component decorator of the class
+		//	For e.g.; app.component.ts:
+		//		import { MainService } from './main-service';
+		//		@Component({
+		//			selector:...
+		//			templateUrl:...
+		//			styleUrls:...
+		//			providers: [MainService]	// comma separated list of services required.
+		/		})
+		// #2: import it in the app.module.ts and list it as a provider in the "providers" section of @NgModule
+		//		which makes the service available globally. Then, just import that service in the component class
+		//		and inject it in the ctor of the component.
+		app.module.ts:
+			import { DataService } from './data.service';
+			:
+			@NgModule({
+			  :,
+			  providers: [DataService],		// comma separated list of services.
+			  bootstrap: [AppComponent]
+			})
+		home.component.ts:
+			import { DataService } from '../data.service';
+			
+			// DI.
+			export class HomeComponent implements OnInit {
+				:
+				goals = [];		// init values set in service earlier.
+				constructor(private _data: DataService) { }
+				:
+				ngOnInit() {
+					this._data.goal.subscribe(res => this.goals = res);	// _data.goal is asObservable
+					this.itemCount = this.goals.length;
+					this._data.changeGoal(this.goals);
+				}
+				
+				addItem() {
+					:
+					this._data.changeGoal(this.goals);		// refresh.			
+				}
+
+				removeItem() {
+					:
+					this._data.changeGoal(this.goals);		// refresh.
+				}
+			}
+		about.component.ts:
+			import { DataService } from '../data.service';
+			// DI.
+			export class AboutComponent implements OnInit {
+				:
+				goals: any;
+				
+				constructor(private route: ActivatedRoute,
+					private router: Router,
+					private _data: DataService) {
+
+					this.route.params.subscribe(res => console.log(res.id));
+					
+					}
+				:
+				ngOnInit() {
+					:
+					this._data.goal.subscribe(res => this.goals = res);	// _data.goal is asObservable
+				}
+				:
+			}
+		about.component.html:
+			:
+			<ul>
+				<li *ngFor="let goal of goals">
+					{{ goal }}
+				</li>
+			</ul>
+	7) Deploying
+		// generates files that are huge
+		ng build
+		// creates a "dist" folder
+		// use PROD flag instead
+		ng build --prod
+		// get an ~89% reduction in size.
+		Just upload the contents of the dist folder to a server.
+		
+		but if uploading to a sub-folder like http://server/folder, then you have to run the ng build cmd as:
+			ng build --prod --base-href="<<url>>"
+		or else, it will not run properly.
+		
+		Another way is thru git hub pages:
+		npm install -g angular-cli-ghpages
+		// also need git (git-scm.com/downloads) and setup a repo
+		// add code to git: 
+		create a github a/c, create a new repo.
+		No need to run git init and git add README.md
+		git add .
+		git commit -m "comment"
+		git remote add origin git@github.com:username/ng5.git
+		git push -u origin master
+		
+		// re-run ngbuild cmd
+		// specify url of target with username.
+		ng build --prod --base-href="https://username.github.io/ng5/"
+		angular-cli-ghpages
+		navigate to https://username.github.io/ng5/ to see the deployed app.
+		
+More Angular 5 topics:
+	Polyfills:
+		Angular supports most recent browsers. This includes the following specific versions:
+
+		Browser	Supported versions
+			Chrome	latest
+			Firefox	latest
+			Edge	2 most recent major versions
+			IE	11,10,9
+			IE Mobile	11
+			Safari	2 most recent major versions
+			iOS	2 most recent major versions
+			Android	Nougat (7.0)
+			Marshmallow (6.0)
+			Lollipop (5.0, 5.1)
+			KitKat (4.4)
+		
+		Enabling polyfills:
+			Angular is built on the latest standards of the web platform. Targeting such a wide range of browsers is challenging because they do not support all features of modern browsers.
+
+			You compensate by loading polyfill scripts ("polyfills") for the browsers that you must support.
+			Enabling Polyfills:
+				
+			Angular CLI users enable polyfills through the src/polyfills.ts file that the CLI created with your project.
+
+			This file incorporates the mandatory and many of the optional polyfills as JavaScript import statements.
+
+			The npm packages for the mandatory polyfills (such as zone.js) were installed automatically for you when you created your project and their corresponding import statements are ready to go. You probably won't touch these.
+
+			But if you need an optional polyfill, you'll have to install its npm package. For example, if you need the web animations polyfill, you could install it with npm, using the following command (or the yarn equivalent):
+
+			npm install --save web-animations-js
+			
+			Then open the polyfills.ts file and un-comment the corresponding import statement as in the following example:
+
+			src/polyfills.ts
+			/**
+			* Required to support Web Animations `@angular/platform-browser/animations`.
+			* Needed for: All but Chrome, Firefox and Opera. http://caniuse.com/#feat=web-animation
+			**/
+			import 'web-animations-js';  // Run `npm install --save web-animations-js`.
+
+			If you can't find the polyfill you want in polyfills.ts, add it yourself, following the same pattern:
+
+				install the npm package
+				import the file in polyfills.ts
+	
+	Code Linting
+		use TSLint
+		https://marketplace.visualstudio.com/items?itemName=eg2.tslint
+		npm install -g tslint
+	
+	Angular Architecture
+		diagram
+		ng new AngDemo
+		folder structure
+			node_modules: all ng modules, components etc.
+			src: source code
+			app: app.* files
+		
+	Modules
+		upper left hand corner of the arch diag
+		
+	Components
+	
+	Templates
+	
+	Metadata
+	
+	Data Binding
+	
+	Directives
+		https://codecraft.tv/courses/angular/built-in-directives/overview/
+		https://codecraft.tv/courses/angular/built-in-directives/ngfor/
+	
+	Services
+	
+	DI
+	
+Using Angular Route Guard For securing routes:
+https://codeburst.io/using-angular-route-guard-for-securing-routes-eabf5b86b4d1
+https://medium.com/@ryanchenkie_40935/angular-authentication-using-route-guards-bf7a4ca13ae3
+
+Lazy Loaded Module Example in Angular 8|7 with loadChildren & Dynamic Imports:
+https://www.techiediaries.com/angular-lazy-load-module-example/
+
+Lazy Loading Routes in Angular:
+https://alligator.io/angular/lazy-loading/
+
+@ViewChild(), @ViewChildren():
+https://www.techiediaries.com/angular-dom-queries-viewchild/
+
+@Input(), @Output() and EventEmitter:
+https://levelup.gitconnected.com/angular-7-share-component-data-with-other-components-1b91d6f0b93f
+https://dzone.com/articles/understanding-output-and-eventemitter-in-angular
+https://www.codementor.io/yomateo/angular7-101-input-output-os4et83m5
+
+Template Driven Forms:
+https://jasonwatmore.com/post/2019/06/15/angular-8-template-driven-forms-validation-example
+https://codecraft.tv/courses/angular/forms/template-driven/
+
+Unit Testing with Jasmine and Karma:
+https://codecraft.tv/courses/angular/unit-testing/jasmine-and-karma/
+https://codecraft.tv/courses/angular/unit-testing/classes-and-pipes/
+https://codecraft.tv/courses/angular/unit-testing/components/
+
+https://medium.com/frontend-fun/angular-unit-testing-jasmine-karma-step-by-step-e3376d110ab4
+https://angular.io/guide/testing
+
+

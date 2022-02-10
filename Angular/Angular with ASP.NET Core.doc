@@ -1,0 +1,97 @@
+		
+Integrate Angular with ASP.NET Core:
+	install Angular-.NET Core-Spa generator ===> SPA => Single Page Application
+		npm install -g yo generator-aspnetcore-spa	// yo => yeoman doctor
+	has a dependency on webpacks, to be installed separately
+		npm install -g webpack
+	md/cd aspnetangular
+	// with .net core 1, do this:
+		yo aspnetcore-spa
+			select Angular 2
+			select .csproj (for VS 2017) (project.json will not be in later version)
+			no unit tests
+			app name: Myapp
+	// with .net core 2.0 sdk, do this:
+		dotnet new angular
+		npm install
+	// then	
+		dotnet run
+			http://localhost:5000	// or whatever port
+
+	Angluar model (field) validations
+		<div *ngIf="!age.touched">
+			untouched
+		</div>
+		
+		other ones:
+			age.touched
+			age.valid
+			age.dirty		// value changed
+	
+	using HTTP services:
+		define the json		// http-service.json
+		define the corresponding json "holder" class
+		in the component, import the 
+			holder class	// holder-class.ts
+			Http, Response modules from '@angular/http'
+			Observable module from 'rxjs/Observable'
+			import 'rxjs/Rx' as well
+		inject Http in the ctor:
+			constructor(private http: Http) {}
+		and then subscribe to the http service. Code in ctor:
+			var data = http.get('assets/http-service.json')
+				.subscribe(res => Console.log(res.json() as HolderClass));
+	
+	Promise vs Observable:
+		Promise: Single Event async operation (not cancelled)
+		Observable: Stream that allows zeor or more callbacks for each event (cancellable)
+		ALL features of Promise are available in Observable, and more
+		For e.g.:
+			make http-service.json an array:
+				[{
+					"name":"Jack Johnson",
+					"age":"25",
+					"occupation":"Programmer",
+					"status":"Married",
+					"income":"$75,000"
+				}]
+			in app.component.ts, declare an array of the holder class:
+				export class AppComponent {
+					result: Array<HolderClass>;
+					
+					constructor(private http: Http) {
+						var data = http.get('assets/http-service.json')
+							.subscribe(res => Console.log(res.json() as HolderClass));
+					}
+					
+					map() {
+						this.http.get('assets/http-service.json')
+							.subscribe(res => this.result = res);
+					}
+				}
+			in app.component.html:
+				<button (click)="map()">Map</button>
+				<ul *ngFor="let item of result">
+					<li>{{ item.name }}</li>
+					<li>{{ item.age }}</li>
+					:
+				</ul>
+			run app in browser, click on "Map" button
+			in the json file, add on more record:
+				[
+				{
+					"name":"Jack Johnson",
+					"age":"25",
+					"occupation":"Programmer",
+					"status":"Married",
+					"income":"$75,000"
+				},
+				{
+					"name":"Joe  Johnson",
+					"age":"30",
+					"occupation":"Accountant",
+					"status":"Single",
+					"income":"$40,000"
+				}
+				]
+			run app in browser, click on "Map" button

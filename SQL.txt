@@ -1,0 +1,214 @@
+Truncate:
+TRUNCATE TABLE HumanResources.JobCandidate; 
+
+ALTER:
+ALTER TABLE Customers
+ADD Email varchar(255);
+
+ALTER TABLE Customers
+DROP COLUMN Email;
+
+ALTER TABLE Persons
+ALTER COLUMN DateOfBirth year;
+
+# Index:
+CREATE INDEX idx_Customer_City
+ON Customers(City)
+
+CREATE INDEX idx_Customer_LastnameFirstname
+ON Customers(Lastname, Firstname)
+
+Subquery:
+/* SELECT statement built using a subquery. */
+SELECT Name
+FROM Production.Product
+WHERE ListPrice =
+    (SELECT ListPrice
+     FROM Production.Product
+     WHERE Name = 'Chainring Bolts' );
+
+SELECT Name
+FROM Production.Product
+WHERE ProductSubcategoryID IN
+    (SELECT ProductSubcategoryID
+     FROM Production.ProductSubcategory
+     WHERE Name = 'Wheels');
+
+SELECT Name
+FROM Production.Product
+WHERE ProductSubcategoryID NOT IN
+    (SELECT ProductSubcategoryID
+     FROM Production.ProductSubcategory
+     WHERE Name = 'Mountain Bikes' 
+        OR Name = 'Road Bikes'
+        OR Name = 'Touring Bikes');
+
+UPDATE Production.Product
+SET ListPrice = ListPrice * 2
+WHERE ProductID IN
+    (SELECT ProductID 
+     FROM Purchasing.ProductVendor
+     WHERE BusinessEntityID = 1540);
+
+
+SELECT Name
+FROM Production.Product
+WHERE ListPrice >
+    (SELECT AVG (ListPrice)
+     FROM Production.Product);
+
+Subquery using FROM:
+/*
+This query uses a subquery in the FROM clause.
+The subquery is given an alias x so that we can
+refer to it in the outer select statement.
+*/
+select x.ProductID, 
+    y.ProductName,
+    x.max_unit_price
+from
+(
+    select ProductID, max(UnitPrice) as max_unit_price
+    from order_details
+    group by ProductID
+) as x
+inner join products as y on x.ProductID = y.ProductID
+
+Example #2:
+select x.ProductID, 
+    y.Name,
+    x.max_unit_price
+from
+(
+    select ProductID, max(Price) as max_unit_price
+    from OrderDetails
+    group by ProductID
+) as x
+inner join products as y on x.ProductID = y.ID
+
+Common Table Expression (CTE):
+Syntax:
+[ WITH <common_table_expression> [ ,...n ] ]  
+  
+<common_table_expression>::=  
+    expression_name [ ( column_name [ ,...n ] ) ]  
+    AS  
+    ( CTE_query_definition )  
+	
+Example:
+-- Define the CTE expression name and column list.  
+WITH Sales_CTE (SalesPersonID, SalesOrderID, SalesYear)  
+AS  
+-- Define the CTE query.  
+(  
+    SELECT SalesPersonID, SalesOrderID, YEAR(OrderDate) AS SalesYear  
+    FROM Sales.SalesOrderHeader  
+    WHERE SalesPersonID IS NOT NULL  
+)  
+-- Define the outer query referencing the CTE name.  
+SELECT SalesPersonID, COUNT(SalesOrderID) AS TotalSales, SalesYear  
+FROM Sales_CTE  
+GROUP BY SalesYear, SalesPersonID  
+ORDER BY SalesPersonID, SalesYear; 
+
+WITH Sales_CTE (SalesPersonID, NumberOfOrders)  
+AS  
+(  
+    SELECT SalesPersonID, COUNT(*)  
+    FROM Sales.SalesOrderHeader  
+    WHERE SalesPersonID IS NOT NULL  
+    GROUP BY SalesPersonID  
+)  
+SELECT AVG(NumberOfOrders) AS "Average Sales Per Person"  
+FROM Sales_CTE;  
+
+INTERCEPT:
+1) The following query returns any distinct values that are returned by both the query on the left and right sides of the INTERSECT operator.
+
+Uses AdventureWorks 
+ 
+SELECT ProductID   
+FROM Production.Product  
+INTERSECT  
+SELECT ProductID   
+FROM Production.WorkOrder ;  
+
+2) The following query returns any distinct values from the query left of the EXCEPT operator that aren't also found on the right query.
+
+Uses AdventureWorks  
+  
+SELECT ProductID   
+FROM Production.Product  
+EXCEPT  
+SELECT ProductID   
+FROM Production.WorkOrder ;  
+ 
+3) The following query returns any distinct values from the query left of the EXCEPT operator that aren't also found on the right query. The tables are reversed from the previous example.
+
+Uses AdventureWorks  
+  
+SELECT ProductID   
+FROM Production.WorkOrder  
+EXCEPT  
+SELECT ProductID   
+FROM Production.Product ;  
+
+
+TRIGGERS:
+http://www.sqlservertutorial.net/sql-server-triggers/
+SQL Server triggers are special stored procedures that are executed automatically in response to the database object, database, and server events. SQL Server provides three type of triggers:
+
+- Data manipulation language (DML) triggers which are invoked automatically in response to INSERT, UPDATE, and DELETE events against tables.
+- Data definition language (DDL) triggers which fire in response to CREATE, ALTER, and DROP statements. DDL triggers also fire in response to some system stored procedures that perform DDL-like operations.
+- Logon triggers which fire in response to LOGON events
+
+Syntax:
+CREATE TRIGGER [schema_name.]trigger_name
+ON table_name
+AFTER  {[INSERT],[UPDATE],[DELETE]}
+[NOT FOR REPLICATION]
+AS
+{sql_statements}
+
+The NOT FOR REPLICATION option instructs SQL Server not to fire the trigger when data modification is made as part of a replication process.
+
+Home / SQL Server Triggers / SQL Server CREATE TRIGGER
+SQL Server CREATE TRIGGER
+
+Summary: in this tutorial, you will learn how to use the SQL Server CREATE TRIGGERstatement to create a new trigger.
+
+Introduction to SQL Server CREATE TRIGGER statement
+The CREATE TRIGGER statement allows you to create a new trigger that is fired automatically whenever an event such as INSERT, DELETE, or UPDATE occurs against a table.
+
+The following illustrates the syntax of the CREATE TRIGGER statement:
+
+CREATE TRIGGER [schema_name.]trigger_name
+ON table_name
+AFTER  {[INSERT],[UPDATE],[DELETE]}
+[NOT FOR REPLICATION]
+AS
+{sql_statements}
+In this syntax:
+
+The schema_name is the name of the schema to which the new trigger belongs. The schema name is optional.
+The trigger_name is the user-defined name for the new trigger.
+The table_name is the table to which the trigger applies.
+The event is listed in the AFTER clause. The event could be INSERT, UPDATE, or DELETE. A single trigger can fire in response to one or more actions against the table.
+The NOT FOR REPLICATION option instructs SQL Server not to fire the trigger when data modification is made as part of a replication process.
+The sql_statements is one or more Transact-SQL used to carry out actions once an event occurs.
+“Virtual” tables for triggers: INSERTED and DELETED
+SQL Server provides two virtual tables that are available specifically for triggers called INSERTED and DELETED tables. SQL Server uses these tables to capture the data of the modified row before and after the event occurs.
+
+The following table shows the content of the INSERTED and DELETED tables before and after each event:
+
+DML event	INSERTED table holds				DELETED table holds
+------------------------------------------------------------------------------------
+INSERT		rows to be inserted					empty
+UPDATE		new rows modified by the update		existing rows modified by the update
+DELETE		empty								rows to be deleted
+
+RAISEERROR:
+https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql?view=sql-server-2017
+
+THROW:
+https://docs.microsoft.com/en-us/sql/t-sql/language-elements/throw-transact-sql?view=sql-server-2017
